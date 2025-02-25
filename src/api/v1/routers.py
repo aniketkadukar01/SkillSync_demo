@@ -19,6 +19,7 @@ router.register(r'lessons', course_view.CourseLessonView, basename='lessons')
 router.register(r'questions', course_view.CourseQuestionView, basename='questions')
 router.register(r'questions-options', course_view.QuestionOptionsView, basename='questions_options')
 router.register(r'answers', course_view.AnswerView, basename='answers')
+router.register(r'assignees', course_view.AssigneeView, basename='assignees')
 
 
 urlpatterns = [

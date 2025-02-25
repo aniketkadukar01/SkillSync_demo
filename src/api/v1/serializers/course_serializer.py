@@ -41,7 +41,7 @@ class CourseSerializer(serializers.ModelSerializer):
 class AssigneeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignee
-        fields = []
+        fields = ['course', 'user', 'type', 'designation', 'department', 'grade']
 
 
 class ModuleSerializer(serializers.ModelSerializer):

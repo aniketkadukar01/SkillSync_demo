@@ -62,7 +62,14 @@ class Assignee(BaseModel):
         limit_choices_to={'choice_type': 'assignee'},
         null=True,
     )
-    designation = models.CharField(max_length=255, blank=True, null=True,)
+    designation = models.ForeignKey(
+        Choice,
+        on_delete=models.SET_NULL,
+        related_name='assignee_designation',
+        limit_choices_to={'choice_type': 'designation'},
+        blank=True,
+        null=True,
+    )
     department = models.CharField(max_length=200, blank=True, null=True,)
     grade = models.CharField(max_length=2,)
 
@@ -96,7 +103,7 @@ class Lesson(BaseModel):
         related_name='lesson_module',
     )
     lesson_name = models.CharField(max_length=255,)
-    lesson_number = models.PositiveIntegerField(unique=True,)
+    lesson_number = models.PositiveIntegerField()
     lesson_duration = models.DurationField()
     lesson_description = models.TextField(max_length=500, blank=True, null=True,)
     media = models.FileField(blank=True, null=True, upload_to='media/lessons_media',)

@@ -6,6 +6,7 @@ from course.models import (
     Question,
     QuestionOptions,
     Answer,
+    Assignee,
 )
 from rest_framework import viewsets
 from ..serializers.course_serializer import (
@@ -16,10 +17,12 @@ from ..serializers.course_serializer import (
     CourseQuestionSerializer,
     QuestionOptionsSerializer,
     AnswerSerializer,
+    AssigneeSerializer,
 )
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import F
+from user.models import User
 
 
 class CourseCategoryView(viewsets.ModelViewSet):
@@ -100,7 +103,7 @@ class CourseLessonView(viewsets.ModelViewSet):
             lesson_number = serializer.validated_data['lesson_number']
             if Lesson.objects.filter(module=module, lesson_number=lesson_number).exists():
                 Lesson.objects.filter(module=module, lesson_number__gte=lesson_number).update(
-                                        lesson_number=F('module_number') + 1)
+                                        lesson_number=F('lesson_number') + 1)
             serializer.save()
             return Response({'success': 'Lesson Created Successfully.'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -164,3 +167,8 @@ class AnswerView(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)
         return Response({'success': f'Answer deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class AssigneeView(viewsets.ModelViewSet):
+    queryset = Assignee.objects.all()
+    serializer_class = AssigneeSerializer

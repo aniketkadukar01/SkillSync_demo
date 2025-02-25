@@ -4,4 +4,5 @@ CHOICE_TYPES = [
     ('assignee', 'Assignee'),
     ('status', 'Status'),
     ('gender', 'Gender'),
+    ('designation', 'Designation'),
 ]
