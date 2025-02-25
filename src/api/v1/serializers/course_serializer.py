@@ -4,6 +4,10 @@ from course.models import (
     Course,
     Assignee,
     Module,
+    Lesson,
+    Question,
+    QuestionOptions,
+    Answer,
 )
 
 class CourseCategorySerializer(serializers.ModelSerializer):
@@ -47,3 +51,27 @@ class ModuleSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'course': {'write_only': True},
         }
+
+
+class CourseLessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['module', 'lesson_name', 'lesson_number', 'lesson_duration', 'lesson_description', 'media']
+
+
+class CourseQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ['module', 'answer_type', 'question']
+
+
+class QuestionOptionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionOptions
+        fields = ['question', 'options']
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['question', 'answer', 'is_correct']

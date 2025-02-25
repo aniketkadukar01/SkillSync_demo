@@ -98,14 +98,14 @@ class Lesson(BaseModel):
     lesson_name = models.CharField(max_length=255,)
     lesson_number = models.PositiveIntegerField(unique=True,)
     lesson_duration = models.DurationField()
-    description = models.TextField(max_length=500, blank=True, null=True,)
+    lesson_description = models.TextField(max_length=500, blank=True, null=True,)
     media = models.FileField(blank=True, null=True, upload_to='media/lessons_media',)
 
     def __str__(self):
         return f'{self.lesson_name} {self.lesson_number}'
 
     class Meta:
-        db_table = ' lessons'
+        db_table = 'lessons'
 
 
 class Question(BaseModel):
@@ -143,6 +143,7 @@ class QuestionOptions(BaseModel):
 
     class Meta:
         db_table = 'question_options'
+        unique_together = ('question', 'options')
 
 
 class Answer(BaseModel):
