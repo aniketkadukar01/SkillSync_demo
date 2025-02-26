@@ -25,8 +25,6 @@ class Course(BaseModel):
         blank=True,
         null=True,
     )
-    no_of_assignee = models.PositiveIntegerField(blank=True, null=True,)
-    course_duration = models.DurationField(blank=True, null=True,)
     status = models.ForeignKey(
         Choice,
         on_delete=models.SET_NULL,
@@ -50,7 +48,7 @@ class Assignee(BaseModel):
         blank=True,
         null=True,
     )
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='assignee_user',
@@ -62,14 +60,6 @@ class Assignee(BaseModel):
         limit_choices_to={'choice_type': 'assignee'},
         null=True,
     )
-    designation = models.ForeignKey(
-        Choice,
-        on_delete=models.SET_NULL,
-        related_name='assignee_designation',
-        limit_choices_to={'choice_type': 'designation'},
-        blank=True,
-        null=True,
-    )
     department = models.CharField(max_length=200, blank=True, null=True,)
     grade = models.CharField(max_length=2,)
 
@@ -78,6 +68,7 @@ class Assignee(BaseModel):
 
     class Meta:
         db_table = 'assignees'
+        unique_together = ('course', 'user')
 
 
 class Module(BaseModel):
@@ -106,7 +97,7 @@ class Lesson(BaseModel):
     lesson_number = models.PositiveIntegerField()
     lesson_duration = models.DurationField()
     lesson_description = models.TextField(max_length=500, blank=True, null=True,)
-    media = models.FileField(blank=True, null=True, upload_to='media/lessons_media',)
+    media = models.FileField(blank=True, null=True, upload_to='media/lessons_media/',)
 
     def __str__(self):
         return f'{self.lesson_name} {self.lesson_number}'
@@ -144,6 +135,7 @@ class QuestionOptions(BaseModel):
         related_name='question_options_question',
     )
     options = models.CharField(max_length=255,)
+    is_correct = models.BooleanField(blank=True, null=True, )
 
     def __str__(self):
         return f'{self.options}'
@@ -151,19 +143,3 @@ class QuestionOptions(BaseModel):
     class Meta:
         db_table = 'question_options'
         unique_together = ('question', 'options')
-
-
-class Answer(BaseModel):
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name='answer_question',
-    )
-    answer = models.CharField(max_length=255, blank=True, null=True,)
-    is_correct = models.BooleanField(blank=True, null=True,)
-
-    def __str__(self):
-        return f'{self.answer} {self.is_correct}'
-
-    class Meta:
-        db_table = 'answers'

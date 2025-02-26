@@ -128,3 +128,12 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Or other backend
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'aniket.k@amazatic.com'
+EMAIL_HOST_PASSWORD = 'wbqc kwkc ujnf wqlo'
+DEFAULT_FROM_EMAIL = 'aniket.k@amazatic.com'

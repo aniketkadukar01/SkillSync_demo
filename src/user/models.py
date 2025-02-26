@@ -54,12 +54,20 @@ class User(AbstractUser, BaseModel):
         blank=True,
         null=True,
     )
-    image = models.ImageField(blank=True, null=True, upload_to='media/user_pictures',)
+    image = models.ImageField(blank=True, null=True, upload_to='media/user_pictures/',)
     gender = models.ForeignKey(
         Choice,
         on_delete=models.DO_NOTHING,
         related_name='users_gender',
         limit_choices_to={'choice_type': 'gender'},
+        blank=True,
+        null=True,
+    )
+    designation = models.ForeignKey(
+        Choice,
+        on_delete=models.SET_NULL,
+        related_name='assignee_designation',
+        limit_choices_to={'choice_type': 'designation'},
         blank=True,
         null=True,
     )

@@ -3,14 +3,27 @@ from rest_framework import serializers
 from user.models import User
 from utils.models import Choice
 from django.contrib.auth.hashers import make_password
+import re
 
 class UserSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def validate_email(self, value):
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(pattern, value):
+            raise serializers.ValidationError('Email is not in proper format.')
+        return value
 
-        if self.instance:
-            self.fields['email'].required = False
-            self.fields['password'].required = False
+    def validate_phone_number(self, value):
+        pattern = r'^\d{10}$'
+        if not re.match(pattern, value):
+            raise serializers.ValidationError('Number must be 10 digit and no letter is allowed.')
+        return value
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        data['status'] = str(instance.status.choice_name) if data['status'] else data['status']
+        data['type'] = str(instance.type.choice_name) if data['type'] else data['type']
+        return data
 
     def create(self, validated_data):
         """
@@ -36,25 +49,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name', 'last_name', 'username', 'status', 'type',]
+        fields = ['email', 'password', 'first_name', 'last_name', 'username', 'status', 'type', 'phone_number',]
         extra_kwargs = {
             'password': {'write_only': True},
         }
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    type = serializers.StringRelatedField(allow_null = True, required=False,)
-    status = serializers.StringRelatedField(allow_null=True, required=False,)
-
-    def create(self, validated_data):
-        pass
-
-    def update(self, instance, validated_data):
-        pass
-
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name' ,'email', 'type', 'username', 'status']
 
 
 class LoginUserSerializer(serializers.Serializer):

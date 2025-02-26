@@ -1,6 +1,5 @@
 from ..serializers.user_serializer import (
     UserSerializer,
-    UserProfileSerializer,
     LoginUserSerializer,
 )
 # noinspection PyUnresolvedReferences
@@ -110,8 +109,3 @@ class UserView(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)
         return Response({'success': f'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return UserProfileSerializer
-        return super().get_serializer_class()

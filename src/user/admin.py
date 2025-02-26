@@ -20,7 +20,8 @@ class UserAdmin(UserAdmin):
                     "phone_number",
                     "status",
                     "image",
-                    "gender"
+                    "gender",
+                    "designation",
                 )
             }
         ),
