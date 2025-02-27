@@ -4,13 +4,10 @@ from utils.models import BaseModel, Choice
 from django.core.validators import MinLengthValidator
 from .managers import CustomUserManager
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.validators import UnicodeUsernameValidator
 
 # Create your models here.
 
 class User(AbstractUser, BaseModel):
-    username_validator = UnicodeUsernameValidator()
-
     username = models.CharField(
         _("username"),
         max_length=150,
@@ -20,7 +17,6 @@ class User(AbstractUser, BaseModel):
         help_text=_(
             "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
         ),
-        validators=[username_validator],
         error_messages={
             "unique": _("A user with that username already exists."),
         },
@@ -71,6 +67,15 @@ class User(AbstractUser, BaseModel):
         blank=True,
         null=True,
     )
+    role = models.ForeignKey(
+        Choice,
+        on_delete=models.SET_NULL,
+        related_name='assignee_type',
+        limit_choices_to={'choice_type': 'assignee'},
+        null=True,
+    )
+    department = models.CharField(max_length=200, blank=True, null=True,)
+    grade = models.CharField(max_length=2, blank=True, null=True,)
 
     objects = CustomUserManager()
 

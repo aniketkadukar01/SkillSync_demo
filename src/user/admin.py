@@ -22,6 +22,9 @@ class UserAdmin(UserAdmin):
                     "image",
                     "gender",
                     "designation",
+                    "role",
+                    "department",
+                    "grade",
                 )
             }
         ),

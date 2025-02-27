@@ -32,10 +32,8 @@ class CourseSerializer(serializers.ModelSerializer):
         This method is taken the current course instance and convert into custom representation.
         """
         data = super().to_representation(instance)
-        if data['category']:
-            data['category'] = str(instance.category.category_name)
-        if data['status']:
-            data['status'] = str(instance.status.choice_name)
+        data['category'] = str(instance.category.category_name) if data['category'] else data['category']
+        data['status'] = str(instance.status.choice_name) if data['status'] else data['status']
         return data
     
     class Meta:
@@ -52,12 +50,11 @@ class AssigneeSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['course'] = str(instance.course.course_title) if data['course'] else data['course']
         data['user'] = f"{instance.user.first_name} {instance.user.last_name}" if data['user'] else data['user']
-        data['type'] = str(instance.type.choice_name) if data['type'] else data['type']
         return data
 
     class Meta:
         model = Assignee
-        fields = ['course', 'user', 'type', 'department', 'grade']
+        fields = ['course', 'user',]
 
 
 class ModuleSerializer(serializers.ModelSerializer):

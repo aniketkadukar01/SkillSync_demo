@@ -22,6 +22,7 @@ from rest_framework import status
 from django.db.models import F
 from user.models import User
 from ..decorators.course_decorators import resolve_assignee_name
+from ..paginations.course_pagination import AssigneePagination
 
 
 class CourseCategoryView(viewsets.ModelViewSet):
@@ -136,6 +137,7 @@ class QuestionOptionsView(viewsets.ModelViewSet):
 class AssigneeView(viewsets.ModelViewSet):
     queryset = Assignee.objects.all()
     serializer_class = AssigneeSerializer
+    pagination_class = AssigneePagination
 
     @resolve_assignee_name
     def create(self, request, *args, **kwargs):

@@ -23,4 +23,6 @@ router.register(r'assignees', course_view.AssigneeView, basename='assignees')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('forget-password/', user_view.ForgetPasswordView.as_view(), name='forget_password'),
+    path('reset-password/<str:encode_user_id>/<str:encode_user_token>/', user_view.ResetPasswordView.as_view(), name='reset_password')
 ]

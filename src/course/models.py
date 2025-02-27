@@ -53,15 +53,6 @@ class Assignee(BaseModel):
         on_delete=models.CASCADE,
         related_name='assignee_user',
     )
-    type = models.ForeignKey(
-        Choice,
-        on_delete=models.SET_NULL,
-        related_name='assignee_type',
-        limit_choices_to={'choice_type': 'assignee'},
-        null=True,
-    )
-    department = models.CharField(max_length=200, blank=True, null=True,)
-    grade = models.CharField(max_length=2,)
 
     def __str__(self):
         return f'{self.user.first_name} {self.user.last_name} and designation is {self.designation}'
@@ -97,7 +88,7 @@ class Lesson(BaseModel):
     lesson_number = models.PositiveIntegerField()
     lesson_duration = models.DurationField()
     lesson_description = models.TextField(max_length=500, blank=True, null=True,)
-    media = models.FileField(blank=True, null=True, upload_to='media/lessons_media/',)
+    media = models.URLField(max_length=255, blank=True, null=True,)
 
     def __str__(self):
         return f'{self.lesson_name} {self.lesson_number}'

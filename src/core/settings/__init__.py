@@ -137,3 +137,5 @@ EMAIL_USE_SSL = False
 EMAIL_HOST_USER = 'aniket.k@amazatic.com'
 EMAIL_HOST_PASSWORD = 'wbqc kwkc ujnf wqlo'
 DEFAULT_FROM_EMAIL = 'aniket.k@amazatic.com'
+
+PASSWORD_RESET_TIMEOUT = 900 # 900 SEC = 15 MIN

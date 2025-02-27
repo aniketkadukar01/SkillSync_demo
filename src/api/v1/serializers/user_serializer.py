@@ -49,16 +49,27 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'first_name', 'last_name', 'username', 'status', 'type', 'phone_number',]
+        fields = ['email', 'password', 'first_name', 'last_name', 'username', 'status', 'type', 'phone_number', 'designation',]
         extra_kwargs = {
             'password': {'write_only': True},
         }
 
 
 class LoginUserSerializer(serializers.Serializer):
-    email = serializers.EmailField(
-        label='Email address',
-        max_length=254,
-        write_only=True,
-    )
+    email = serializers.EmailField(label='Email address', max_length=254, write_only=True,)
     password = serializers.CharField(max_length=128, write_only=True)
+
+
+class ForgetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(label='Email address', max_length=254,)
+
+    def validate_email(self, value):
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not re.match(pattern, value):
+            raise serializers.ValidationError('Email is not in proper format.')
+        return value
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=128, write_only=True)
+    confirm_password = serializers.CharField(max_length=128, write_only=True)
