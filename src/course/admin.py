@@ -5,6 +5,10 @@ from .models import (
     Assignee,
     Module,
     Lesson,
+    Question,
+    QuestionOptions,
+    UserScore,
+    UserAnswer,
 )
 from django.utils.translation import gettext_lazy as _
 
@@ -97,3 +101,61 @@ class LessonAdmin(admin.ModelAdmin):
         ),
     )
     list_display = ("module", "lesson_name", "lesson_number",)
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    fieldsets = ((_("Question info"), {"fields": ("module", "answer_type", "question",)}),)
+    add_fieldsets = ((None, {"classes": ("wide",), "fields": ("module", "answer_type", "question",),},),)
+    list_display = ("module", "answer_type", "question",)
+    list_filter = ("answer_type",)
+
+
+@admin.register(QuestionOptions)
+class QuestionOptions(admin.ModelAdmin):
+    fieldsets = ((_("Question options info"), {"fields": ("question", "options", "is_correct",)}),)
+    add_fieldsets = ((None, {"classes": ("wide",), "fields": ("question", "options", "is_correct",),},),)
+    list_display = ("question", "options", "is_correct",)
+    list_filter = ("is_correct",)
+
+
+@admin.register(UserScore)
+class UserScoreAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            _("User Score info"),
+            {
+                "fields": (
+                    "user",
+                    "lesson",
+                    "attempts",
+                    "score_achieved",
+                    "test_result",
+                )
+            }
+        ),
+    )
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "user",
+                    "lesson",
+                    "attempts",
+                    "score_achieved",
+                    "test_result",
+                ),
+            },
+        ),
+    )
+    list_display = ("user", "attempts", "score_achieved",)
+    list_filter = ("test_result",)
+
+
+@admin.register(UserAnswer)
+class UserAnswerAdmin(admin.ModelAdmin):
+    fieldsets = ((_("User answer info"), {"fields": ("user", "answer", "user_answer",)}),)
+    add_fieldsets = ((None, {"classes": ("wide",), "fields": ("user", "answer", "user_answer",), },),)
+    list_display = ("user", "answer", "user_answer",)
