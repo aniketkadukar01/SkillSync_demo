@@ -73,7 +73,7 @@ class CreateRefreshTokenView(ViewSet):
             return Response({'error': 'Refresh token is not found.'}, status=status.HTTP_404_NOT_FOUND)
         try:
             refresh_token = RefreshToken(request.data['refresh'])
-            user_id = refresh_token['user_id']
+            user_id = refresh_token.payload['user_id']
             user = User.objects.get(id=user_id)
             refresh_token.blacklist()
             token = get_tokens_for_user(user)
@@ -86,6 +86,8 @@ class CreateRefreshTokenView(ViewSet):
             )
         except TokenError:
             return Response({'error': 'Token already expired, Login again.'}, status=status.HTTP_400_BAD_REQUEST)
+        except KeyError:  # Catch key error if user_id is not in the payload.
+            return Response({'error': 'Invalid refresh token payload.'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
