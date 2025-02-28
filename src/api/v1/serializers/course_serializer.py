@@ -44,7 +44,15 @@ class CourseSerializer(serializers.ModelSerializer):
         :param obj: current instance which passed to become serialized.
         :return: calculated value.
         """
-        return Lesson.objects.filter(module__course=obj).aggregate(total_duration=Sum('lesson_duration'))['total_duration']
+        total_duration = Lesson.objects.filter(module__course=obj).aggregate(total_duration=Sum('lesson_duration'))['total_duration']
+        if total_duration:
+            total_seconds = total_duration.total_seconds()
+            hours = int(total_seconds // 3600)
+            minutes = int((total_seconds % 3600) // 60)
+            seconds = int(total_seconds % 60)
+            return f'{hours}hr {minutes}min {seconds}sec'
+        else:
+            return "0hr 0min 0sec"
 
     def to_representation(self, instance):
         """

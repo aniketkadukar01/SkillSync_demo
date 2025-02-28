@@ -34,7 +34,7 @@ class Course(BaseModel):
     )
 
     def __str__(self):
-        return f'Course is {self.course_title} and duration {self.course_duration}'
+        return f'Course is {self.course_title}'
 
     class Meta:
         db_table = 'courses'
@@ -55,7 +55,7 @@ class Assignee(BaseModel):
     )
 
     def __str__(self):
-        return f'{self.user.first_name} {self.user.last_name} and designation is {self.designation}'
+        return f'{self.user.first_name} {self.user.last_name}'
 
     class Meta:
         db_table = 'assignees'
@@ -174,7 +174,7 @@ class UserAnswer(BaseModel):
         related_name='user_answer',
     )
     answer = models.ForeignKey(
-        QuestionOptions,
+        Question,
         on_delete=models.SET_NULL,
         related_name='answer',
         blank=True,
