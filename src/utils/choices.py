@@ -5,4 +5,5 @@ CHOICE_TYPES = [
     ('status', 'Status'),
     ('gender', 'Gender'),
     ('designation', 'Designation'),
+    ('test_result', 'Test_Result'),
 ]

@@ -126,7 +126,7 @@ class QuestionOptions(BaseModel):
         related_name='question_options_question',
     )
     options = models.CharField(max_length=255,)
-    is_correct = models.BooleanField(blank=True, null=True, )
+    is_correct = models.BooleanField(blank=True, null=True,)
 
     def __str__(self):
         return f'{self.options}'
@@ -134,3 +134,56 @@ class QuestionOptions(BaseModel):
     class Meta:
         db_table = 'question_options'
         unique_together = ('question', 'options')
+
+
+class UserScore(BaseModel):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_score',
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.SET_NULL,
+        related_name='lesson_score',
+        blank=True,
+        null=True,
+    )
+    attempts = models.PositiveIntegerField()
+    score_achieved = models.DecimalField(max_digits=4, decimal_places=2, blank=True, null=True,)
+    test_result = models.ForeignKey(
+        Choice,
+        on_delete=models.SET_NULL,
+        related_name='test_result',
+        limit_choices_to={'choice_type': 'test_result'},
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name} {self.score_achieved}'
+
+    class Meta:
+        db_table = 'user_scores'
+
+
+class UserAnswer(BaseModel):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='user_answer',
+    )
+    answer = models.ForeignKey(
+        QuestionOptions,
+        on_delete=models.SET_NULL,
+        related_name='answer',
+        blank=True,
+        null=True,
+    )
+    user_answer = models.TextField(max_length=300, blank=True, null=True,)
+
+    def __str__(self):
+        return f'{self.user.first_name} {self.user.last_name} {self.user_answer}'
+
+    class Meta:
+        db_table = 'user_answers'

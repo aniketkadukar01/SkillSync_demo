@@ -4,7 +4,6 @@ from ..serializers.user_serializer import (
     ForgetPasswordSerializer,
     ResetPasswordSerializer,
 )
-# noinspection PyUnresolvedReferences
 from user.models import User
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ViewSet, ModelViewSet
@@ -25,6 +24,7 @@ from ..paginations.user_pagination import UserPagination
 
 def get_tokens_for_user(user):
     """
+    This method is used to create new access and refresh token.
     :param user: instance of current user.
     :return: access and refresh token.
     """
@@ -36,6 +36,8 @@ def get_tokens_for_user(user):
 
 
 class LoginView(ViewSet):
+    """This View is used for user Login"""
+
     permission_classes = [AllowAny]
 
     def create(self, request):
@@ -59,6 +61,8 @@ class LoginView(ViewSet):
 
 
 class CreateRefreshTokenView(ViewSet):
+    """This View is used for create refresh token"""
+
     permission_classes = [AllowAny]
 
     def create(self, request):
@@ -87,6 +91,8 @@ class CreateRefreshTokenView(ViewSet):
 
 
 class LogoutView(ViewSet):
+    """This View is used for user Logout."""
+
     def create(self, request):
         """
         This method is used to log out the user.
@@ -102,22 +108,34 @@ class LogoutView(ViewSet):
 
 
 class LogoutAllView(ViewSet):
+    """This View is used for user Logout from all sessions."""
+
     def create(self, request):
         """
         This method is used to log out user from all the devices.
         """
         # If user is authenticated then authentication middleware set the current user.
-        # Delete all the OutstandingToken and Blacklisted data from the database
+        # Delete all the OutstandingToken and Blacklisted data from the database,
         # So user can't create new access token from the old refresh token.
         OutstandingToken.objects.filter(user=request.user).delete()
         return Response({'success': 'Logout from all devices successfully.'}, status=status.HTTP_200_OK)
 
 
 class ForgetPasswordView(APIView):
+    """This View is used for user forgot password."""
+
     authentication_classes = []
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
+        """
+        This method create encode user_id and user_token based on email passed and sent back a link through email.
+        This link is for frontend on click that link a new page open for reset password.
+        :param request: email
+        :param args: position arguments if any
+        :param kwargs: keywords arguments if any.
+        :return: email to user.
+        """
         serializer = ForgetPasswordSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -141,10 +159,20 @@ class ForgetPasswordView(APIView):
 
 
 class ResetPasswordView(APIView):
+    """This View is used for user reset-password password."""
+
     authentication_classes = []
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
+        """
+        This method used of that encode user_id and user_token for user Recognition which passed in forgot password api.
+        After user is known then password is validated and update in database
+        :param request: password and confirm password which user want to update.
+        :param args: position arguments if any.
+        :param kwargs: encode user_id and user_token.
+        :return: success message.
+        """
         encode_user_id = kwargs.get('encode_user_id')
         encode_user_token = kwargs.get('encode_user_token')
         user_id = int(smart_str(urlsafe_base64_decode(encode_user_id)))
@@ -168,14 +196,45 @@ class ResetPasswordView(APIView):
 
 
 class UserView(ModelViewSet):
+    """This View is used for user operation api."""
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = UserPagination
 
     def create(self, request, *args, **kwargs):
+        """
+        This method is used to create and return success message to user.
+        :param request: user data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+        """
         super().create(request, *args, **kwargs)
         return Response({'success': f'User created successfully.'}, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
+        """
+        This method is used to destroy and return success message to user.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: user id.
+        :return: success message.
+        """
         super().destroy(request, *args, **kwargs)
         return Response({'success': f'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class MeApiView(APIView):
+    """This View is used for retrieve user."""
+
+    def get(self, request, *args, **kwargs):
+        """
+        This method is used to retrieve the user data based on the user_id passed in jwt token.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: user data.
+        """
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

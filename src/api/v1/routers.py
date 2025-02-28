@@ -19,10 +19,13 @@ router.register(r'lessons', course_view.CourseLessonView, basename='lessons')
 router.register(r'questions', course_view.CourseQuestionView, basename='questions')
 router.register(r'questions-options', course_view.QuestionOptionsView, basename='questions_options')
 router.register(r'assignees', course_view.AssigneeView, basename='assignees')
+router.register(r'user-scores', course_view.UserScoreView, basename='user_scores')
+router.register(r'user-answers', course_view.UserAnswerView, basename='user_answers')
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('forget-password/', user_view.ForgetPasswordView.as_view(), name='forget_password'),
-    path('reset-password/<str:encode_user_id>/<str:encode_user_token>/', user_view.ResetPasswordView.as_view(), name='reset_password')
+    path('reset-password/<str:encode_user_id>/<str:encode_user_token>/', user_view.ResetPasswordView.as_view(), name='reset_password'),
+    path('me/', user_view.MeApiView.as_view(), name='me'),
 ]

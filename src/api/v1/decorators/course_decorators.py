@@ -3,6 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 def resolve_assignee_name(view_method):
+    """
+    Decorator used to take the full_name as input or designation of the user,
+    Based on the input we are search the user in the database.
+    :param view_method: method.
+    :return: function.
+    """
     def wrapper(self, request, *args, **kwargs):
         if 'full_name' in request.data:
             full_name = request.data['full_name'].strip()
