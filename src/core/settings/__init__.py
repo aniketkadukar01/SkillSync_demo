@@ -140,3 +140,12 @@ EMAIL_HOST_PASSWORD = 'wbqc kwkc ujnf wqlo'
 DEFAULT_FROM_EMAIL = 'aniket.k@amazatic.com'
 
 PASSWORD_RESET_TIMEOUT = 900 # 900 SEC = 15 MIN
+
+# Celery Settings
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'UTC'
+# CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

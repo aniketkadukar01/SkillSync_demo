@@ -1,6 +1,5 @@
 **/.idea
 **/.venv
-**/env
 **/local.py
 **/__pycache__
 **/sql_queries.sql

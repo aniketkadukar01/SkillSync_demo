@@ -14,12 +14,11 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework.views import APIView
-from django.conf import settings
-from django.core.mail import send_mail
-from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, smart_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from ..paginations.user_pagination import UserPagination
+from ..tasks.send_email_for_reset_password import send_forgot_password_email
 
 
 def get_tokens_for_user(user):
@@ -150,11 +149,7 @@ class ForgetPasswordView(APIView):
             encode_user_token = PasswordResetTokenGenerator().make_token(user)
             link = f'http://localhost:3000/reset-password/{encode_user_id}/{encode_user_token}'
 
-            subject = 'Reset Password.'
-            message = f'Hello Sir/Mam\nFor Reset your password click: {link}'
-            from_email = settings.EMAIL_HOST_USER
-            to_email = [user.email]
-            send_mail(subject, message, from_email, to_email)
+            send_forgot_password_email.apply_async(args=[user.email, link])
             return Response({'success': 'Reset password email sent to your email.'},
                             status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
