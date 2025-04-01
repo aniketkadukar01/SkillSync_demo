@@ -19,6 +19,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from ..paginations.user_pagination import UserPagination
 from ..tasks.send_email_for_reset_password import send_forgot_password_email
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 
 def get_tokens_for_user(user):
@@ -242,3 +243,59 @@ class MeApiView(APIView):
         """
         serializer = UserSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class Enable2FAView(APIView):
+    """
+    This view class is used to implement 2FA.
+    first we create the url for qr code when user first request, using get handler method
+    second after scan the qrcode the otp start generating in google authenticator app, user have to enter otp to verify himself.
+    then it is successfully enable, using post handle method.
+    """
+    def get(self, request):
+        device, created = TOTPDevice.objects.get_or_create(user=request.user, confirmed=False)
+
+        if not created and device.confirmed:
+            return Response({'message': '2FA is already enabled on this device.'}, status=status.HTTP_409_CONFLICT)
+
+        return Response({'provisioning_uri': device.config_url}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        device = TOTPDevice.objects.filter(user=request.user, confirmed=False).first()
+
+        if device and device.verify_token(request.data.get('otp')):
+            device.confirmed = True
+            device.save()
+            return Response({'message': '2FA enabled successfully!'}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VerifyOTPView(APIView):
+    """
+    This View is used to verify otp at the time of user login.
+    View is usefull after the user successfully verified the otp firstly in the Enable2FAView.
+    """
+    def post(self, request):
+        device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+
+        if device and device.verify_token(request.data.get('otp')):
+            return Response({'message': 'OTP verified successfully!'}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'Invalid OTP or 2FA is disabled.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Disable2FAView(APIView):
+    """
+    View is used to disable the 2FA.
+    """
+    def post(self, request):
+        device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+
+        if device and device.verify_token(request.data.get('otp')):
+            device.confirmed = False
+            device.save()
+
+            return Response({'message': '2FA has been disabled successfully.'}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'No active 2FA device found.'}, status=status.HTTP_404_NOT_FOUND)
