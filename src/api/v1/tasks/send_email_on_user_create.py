@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from celery import shared_task
 
-@shared_task()
+@shared_task
 def send_welcome_email(first_name, last_name, user_id, email):
     """
     Sends a welcome email to a newly created user. methods runs asynchronously.

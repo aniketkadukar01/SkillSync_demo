@@ -199,6 +199,13 @@ class UserView(ModelViewSet):
     serializer_class = UserSerializer
     pagination_class = UserPagination
 
+    def get_permissions(self):
+        """
+        This method ensure that when user is created then the permission is allow any,
+        otherwise the global authentication which were mentioned in the settings.
+        """
+        return [AllowAny()] if self.action == 'create' else super().get_permissions()
+
     def create(self, request, *args, **kwargs):
         """
         This method is used to create and return success message to user.
