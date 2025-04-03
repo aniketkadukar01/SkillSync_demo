@@ -1,0 +1,2151 @@
+openapi: 3.0.3
+info:
+  title: Your Project API
+  version: 1.0.0
+  description: Your project description
+paths:
+  /api/v1/Create-refresh-token/:
+    post:
+      operationId: v1_Create_refresh_token_create
+      description: This method is used to generate the new access and refresh token
+        if access token is expired.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          description: No response body
+  /api/v1/assignees/:
+    get:
+      operationId: v1_assignees_list
+      description: This View is used for Assignee api.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAssigneeList'
+          description: ''
+    post:
+      operationId: v1_assignees_create
+      description: This View is used for Assignee api.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Assignee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Assignee'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignee'
+          description: ''
+  /api/v1/assignees/{id}/:
+    get:
+      operationId: v1_assignees_retrieve
+      description: This View is used for Assignee api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignee.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignee'
+          description: ''
+    put:
+      operationId: v1_assignees_update
+      description: |-
+        This method is used to update and return success message.
+        :param request: Assignee data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignee.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Assignee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Assignee'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignee'
+          description: ''
+    patch:
+      operationId: v1_assignees_partial_update
+      description: This View is used for Assignee api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignee.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignee'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignee'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignee'
+          description: ''
+    delete:
+      operationId: v1_assignees_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this assignee.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/course-categories/:
+    get:
+      operationId: v1_course_categories_list
+      description: This View is used for Course-Category api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseCategory'
+          description: ''
+    post:
+      operationId: v1_course_categories_create
+      description: |-
+        This method is used to create and return success message.
+        :param request: course-category data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseCategory'
+          description: ''
+  /api/v1/course-categories/{id}/:
+    get:
+      operationId: v1_course_categories_retrieve
+      description: This View is used for Course-Category api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course category.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseCategory'
+          description: ''
+    put:
+      operationId: v1_course_categories_update
+      description: |-
+        This method is used to update and return success message.
+        :param request: course-category data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course category.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseCategory'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseCategory'
+          description: ''
+    patch:
+      operationId: v1_course_categories_partial_update
+      description: This View is used for Course-Category api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course category.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseCategory'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseCategory'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseCategory'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseCategory'
+          description: ''
+    delete:
+      operationId: v1_course_categories_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course category.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/courses/:
+    get:
+      operationId: v1_courses_list
+      description: This View is used for Course api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+          description: ''
+    post:
+      operationId: v1_courses_create
+      description: |-
+        This method is used to create and return success message.
+        :param request: course data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+  /api/v1/courses/{id}/:
+    get:
+      operationId: v1_courses_retrieve
+      description: This View is used for Course api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    put:
+      operationId: v1_courses_update
+      description: This View is used for Course api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    patch:
+      operationId: v1_courses_partial_update
+      description: This View is used for Course api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    delete:
+      operationId: v1_courses_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/forget-password/:
+    post:
+      operationId: v1_forget_password_create
+      description: |-
+        This method create encode user_id and user_token based on email passed and sent back a link through email.
+        This link is for frontend on click that link a new page open for reset password.
+        :param request: email
+        :param args: position arguments if any
+        :param kwargs: keywords arguments if any.
+        :return: email to user.
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/lessons/:
+    get:
+      operationId: v1_lessons_list
+      description: This View is used for Lesson api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseLesson'
+          description: ''
+    post:
+      operationId: v1_lessons_create
+      description: |-
+        This method is used to create and return success message and adjust the lesson_number accordingly.
+        :param request: Lesson data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseLesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseLesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseLesson'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseLesson'
+          description: ''
+  /api/v1/lessons/{id}/:
+    get:
+      operationId: v1_lessons_retrieve
+      description: This View is used for Lesson api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseLesson'
+          description: ''
+    put:
+      operationId: v1_lessons_update
+      description: |-
+        This method is used to update and return success message and adjust the lesson_number accordingly.
+        :param request: Lesson data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseLesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseLesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseLesson'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseLesson'
+          description: ''
+    patch:
+      operationId: v1_lessons_partial_update
+      description: This View is used for Lesson api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseLesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseLesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseLesson'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseLesson'
+          description: ''
+    delete:
+      operationId: v1_lessons_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this lesson.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/login/:
+    post:
+      operationId: v1_login_create
+      description: This method is used to authenticate and create the token for user.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          description: No response body
+  /api/v1/logout/:
+    post:
+      operationId: v1_logout_create
+      description: This method is used to log out the user.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          description: No response body
+  /api/v1/logout-all/:
+    post:
+      operationId: v1_logout_all_create
+      description: This method is used to log out user from all the devices.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          description: No response body
+  /api/v1/me/:
+    get:
+      operationId: v1_me_retrieve
+      description: |-
+        This method is used to retrieve the user data based on the user_id passed in jwt token.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: user data.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/v1/modules/:
+    get:
+      operationId: v1_modules_list
+      description: This View is used for Module api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Module'
+          description: ''
+    post:
+      operationId: v1_modules_create
+      description: |-
+        This method is used to create and return success message and adjust the module_number accordingly.
+        :param request: Module data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Module'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Module'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Module'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+  /api/v1/modules/{id}/:
+    get:
+      operationId: v1_modules_retrieve
+      description: This View is used for Module api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this module.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+    put:
+      operationId: v1_modules_update
+      description: |-
+        This method is used to update and return success message and adjust the module_number accordingly.
+        :param request: Module data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this module.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Module'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Module'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Module'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+    patch:
+      operationId: v1_modules_partial_update
+      description: This View is used for Module api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this module.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedModule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedModule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedModule'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+    delete:
+      operationId: v1_modules_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this module.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/questions/:
+    get:
+      operationId: v1_questions_list
+      description: This View is used for Question api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseQuestion'
+          description: ''
+    post:
+      operationId: v1_questions_create
+      description: |-
+        This method is used to create and return success message.
+        :param request: Question data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseQuestion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseQuestion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseQuestion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseQuestion'
+          description: ''
+  /api/v1/questions-options/:
+    get:
+      operationId: v1_questions_options_list
+      description: This View is used for QuestionOptions api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuestionOptions'
+          description: ''
+    post:
+      operationId: v1_questions_options_create
+      description: |-
+        This method is used to create and return success message.
+        :param request: QuestionOptions data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionOptions'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QuestionOptions'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/QuestionOptions'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionOptions'
+          description: ''
+  /api/v1/questions-options/{id}/:
+    get:
+      operationId: v1_questions_options_retrieve
+      description: This View is used for QuestionOptions api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question options.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionOptions'
+          description: ''
+    put:
+      operationId: v1_questions_options_update
+      description: This View is used for QuestionOptions api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question options.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionOptions'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/QuestionOptions'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/QuestionOptions'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionOptions'
+          description: ''
+    patch:
+      operationId: v1_questions_options_partial_update
+      description: This View is used for QuestionOptions api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question options.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestionOptions'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestionOptions'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedQuestionOptions'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionOptions'
+          description: ''
+    delete:
+      operationId: v1_questions_options_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question options.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/questions/{id}/:
+    get:
+      operationId: v1_questions_retrieve
+      description: This View is used for Question api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseQuestion'
+          description: ''
+    put:
+      operationId: v1_questions_update
+      description: This View is used for Question api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseQuestion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CourseQuestion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CourseQuestion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseQuestion'
+          description: ''
+    patch:
+      operationId: v1_questions_partial_update
+      description: This View is used for Question api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseQuestion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseQuestion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourseQuestion'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseQuestion'
+          description: ''
+    delete:
+      operationId: v1_questions_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this question.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/reset-password/{encode_user_id}/{encode_user_token}/:
+    post:
+      operationId: v1_reset_password_create
+      description: |-
+        This method used of that encode user_id and user_token for user Recognition which passed in forgot password api.
+        After user is known then password is validated and update in database
+        :param request: password and confirm password which user want to update.
+        :param args: position arguments if any.
+        :param kwargs: encode user_id and user_token.
+        :return: success message.
+      parameters:
+      - in: path
+        name: encode_user_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: encode_user_token
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/user-answers/:
+    get:
+      operationId: v1_user_answers_list
+      description: This View is used for User-Answer api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserAnswer'
+          description: ''
+    post:
+      operationId: v1_user_answers_create
+      description: |-
+        This method is used to create and return success message.
+        :param request: User Answer data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAnswer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAnswer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAnswer'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAnswer'
+          description: ''
+  /api/v1/user-answers/{id}/:
+    get:
+      operationId: v1_user_answers_retrieve
+      description: This View is used for User-Answer api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user answer.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAnswer'
+          description: ''
+    put:
+      operationId: v1_user_answers_update
+      description: This View is used for User-Answer api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user answer.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAnswer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserAnswer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserAnswer'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAnswer'
+          description: ''
+    patch:
+      operationId: v1_user_answers_partial_update
+      description: This View is used for User-Answer api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user answer.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAnswer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAnswer'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserAnswer'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAnswer'
+          description: ''
+    delete:
+      operationId: v1_user_answers_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user answer.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/user-scores/:
+    get:
+      operationId: v1_user_scores_list
+      description: This View is used for User-Score api.
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserScore'
+          description: ''
+    post:
+      operationId: v1_user_scores_create
+      description: |-
+        This method is used to create and return success message.
+        :param request: User Score data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserScore'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserScore'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserScore'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserScore'
+          description: ''
+  /api/v1/user-scores/{id}/:
+    get:
+      operationId: v1_user_scores_retrieve
+      description: This View is used for User-Score api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user score.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserScore'
+          description: ''
+    put:
+      operationId: v1_user_scores_update
+      description: This View is used for User-Score api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user score.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserScore'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserScore'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserScore'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserScore'
+          description: ''
+    patch:
+      operationId: v1_user_scores_partial_update
+      description: This View is used for User-Score api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user score.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserScore'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserScore'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserScore'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserScore'
+          description: ''
+    delete:
+      operationId: v1_user_scores_destroy
+      description: |-
+        This method is used to destroy and return success message.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user score.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/v1/users/:
+    get:
+      operationId: v1_users_list
+      description: This View is used for user operation api.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: v1_users_create
+      description: |-
+        This method is used to create and return success message to user.
+        :param request: user data.
+        :param args: position arguments if any.
+        :param kwargs: keywords arguments if any.
+        :return: success message.
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/v1/users/{id}/:
+    get:
+      operationId: v1_users_retrieve
+      description: This View is used for user operation api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: v1_users_update
+      description: This View is used for user operation api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: v1_users_partial_update
+      description: This View is used for user operation api.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: v1_users_destroy
+      description: |-
+        This method is used to destroy and return success message to user.
+        :param request: none.
+        :param args: position arguments if any.
+        :param kwargs: user id.
+        :return: success message.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - v1
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Assignee:
+      type: object
+      description: This Serializer is used for Assignee operation
+      properties:
+        course:
+          type: integer
+          nullable: true
+        user:
+          type: integer
+      required:
+      - course
+      - user
+    CategoryNameEnum:
+      enum:
+      - training
+      - compliance
+      - learning
+      type: string
+      description: |-
+        * `training` - Training
+        * `compliance` - Compliance
+        * `learning` - Learning
+    Course:
+      type: object
+      description: This Serializer is used for Course operation
+      properties:
+        course_title:
+          type: string
+          maxLength: 255
+        is_mandatory:
+          type: boolean
+          nullable: true
+        category:
+          type: integer
+          nullable: true
+        no_of_assignee:
+          type: string
+          readOnly: true
+        course_duration:
+          type: string
+          readOnly: true
+        status:
+          type: integer
+          nullable: true
+      required:
+      - course_duration
+      - course_title
+      - no_of_assignee
+    CourseCategory:
+      type: object
+      description: This Serializer is used for Course-Category operation
+      properties:
+        category_name:
+          $ref: '#/components/schemas/CategoryNameEnum'
+      required:
+      - category_name
+    CourseLesson:
+      type: object
+      description: This Serializer is used for Course Lesson operation
+      properties:
+        module:
+          type: integer
+        lesson_name:
+          type: string
+          maxLength: 255
+        lesson_number:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        lesson_duration:
+          type: string
+        lesson_description:
+          type: string
+          nullable: true
+          maxLength: 500
+        media:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 255
+      required:
+      - lesson_duration
+      - lesson_name
+      - lesson_number
+      - module
+    CourseQuestion:
+      type: object
+      description: This Serializer is used for Course Question operation
+      properties:
+        module:
+          type: integer
+        answer_type:
+          type: integer
+          nullable: true
+        question:
+          type: string
+          maxLength: 300
+      required:
+      - module
+      - question
+    Module:
+      type: object
+      description: This Serializer is used for Module operation
+      properties:
+        course:
+          type: integer
+          writeOnly: true
+        module_name:
+          type: string
+          maxLength: 255
+        module_number:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+      required:
+      - course
+      - module_name
+      - module_number
+    PaginatedAssigneeList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assignee'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedAssignee:
+      type: object
+      description: This Serializer is used for Assignee operation
+      properties:
+        course:
+          type: integer
+          nullable: true
+        user:
+          type: integer
+    PatchedCourse:
+      type: object
+      description: This Serializer is used for Course operation
+      properties:
+        course_title:
+          type: string
+          maxLength: 255
+        is_mandatory:
+          type: boolean
+          nullable: true
+        category:
+          type: integer
+          nullable: true
+        no_of_assignee:
+          type: string
+          readOnly: true
+        course_duration:
+          type: string
+          readOnly: true
+        status:
+          type: integer
+          nullable: true
+    PatchedCourseCategory:
+      type: object
+      description: This Serializer is used for Course-Category operation
+      properties:
+        category_name:
+          $ref: '#/components/schemas/CategoryNameEnum'
+    PatchedCourseLesson:
+      type: object
+      description: This Serializer is used for Course Lesson operation
+      properties:
+        module:
+          type: integer
+        lesson_name:
+          type: string
+          maxLength: 255
+        lesson_number:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        lesson_duration:
+          type: string
+        lesson_description:
+          type: string
+          nullable: true
+          maxLength: 500
+        media:
+          type: string
+          format: uri
+          nullable: true
+          maxLength: 255
+    PatchedCourseQuestion:
+      type: object
+      description: This Serializer is used for Course Question operation
+      properties:
+        module:
+          type: integer
+        answer_type:
+          type: integer
+          nullable: true
+        question:
+          type: string
+          maxLength: 300
+    PatchedModule:
+      type: object
+      description: This Serializer is used for Module operation
+      properties:
+        course:
+          type: integer
+          writeOnly: true
+        module_name:
+          type: string
+          maxLength: 255
+        module_number:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+    PatchedQuestionOptions:
+      type: object
+      description: This Serializer is used for Question Options operation
+      properties:
+        question:
+          type: integer
+        options:
+          type: string
+          maxLength: 255
+    PatchedUser:
+      type: object
+      description: This Serializer is used for user operation
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        username:
+          type: string
+          nullable: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          maxLength: 150
+        status:
+          type: integer
+          nullable: true
+        type:
+          type: integer
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 10
+          minLength: 10
+        designation:
+          type: integer
+          nullable: true
+    PatchedUserAnswer:
+      type: object
+      description: This Serializer is used for User Answer operation
+      properties:
+        user:
+          type: integer
+        answer:
+          type: integer
+          nullable: true
+        user_answer:
+          type: string
+          nullable: true
+          maxLength: 300
+    PatchedUserScore:
+      type: object
+      description: This Serializer is used for User Score operation
+      properties:
+        user:
+          type: integer
+        lesson:
+          type: integer
+          nullable: true
+        attempts:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        score_achieved:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          nullable: true
+        test_result:
+          type: integer
+          nullable: true
+    QuestionOptions:
+      type: object
+      description: This Serializer is used for Question Options operation
+      properties:
+        question:
+          type: integer
+        options:
+          type: string
+          maxLength: 255
+      required:
+      - options
+      - question
+    User:
+      type: object
+      description: This Serializer is used for user operation
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        username:
+          type: string
+          nullable: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          maxLength: 150
+        status:
+          type: integer
+          nullable: true
+        type:
+          type: integer
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+          maxLength: 10
+          minLength: 10
+        designation:
+          type: integer
+          nullable: true
+      required:
+      - email
+      - password
+    UserAnswer:
+      type: object
+      description: This Serializer is used for User Answer operation
+      properties:
+        user:
+          type: integer
+        answer:
+          type: integer
+          nullable: true
+        user_answer:
+          type: string
+          nullable: true
+          maxLength: 300
+      required:
+      - user
+    UserScore:
+      type: object
+      description: This Serializer is used for User Score operation
+      properties:
+        user:
+          type: integer
+        lesson:
+          type: integer
+          nullable: true
+        attempts:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        score_achieved:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          nullable: true
+        test_result:
+          type: integer
+          nullable: true
+      required:
+      - attempts
+      - user
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -28,7 +28,7 @@ urlpatterns = [
     path('forget-password/', user_view.ForgetPasswordView.as_view(), name='forget_password'),
     path('reset-password/<str:encode_user_id>/<str:encode_user_token>/', user_view.ResetPasswordView.as_view(), name='reset_password'),
     path('me/', user_view.MeApiView.as_view(), name='me'),
-    path('setup-2fa/', user_view.Enable2FAView.as_view(), name='2FA-setup'),
-    path('verify-2fa/', user_view.VerifyOTPView.as_view(), name='2FA-verify'),
-    path('disable-2fa/', user_view.Disable2FAView.as_view(), name='2FA-disable'),
+    # path('setup-2fa/', user_view.Enable2FAView.as_view(), name='2FA-setup'),
+    # path('verify-2fa/', user_view.VerifyOTPView.as_view(), name='2FA-verify'),
+    # path('disable-2fa/', user_view.Disable2FAView.as_view(), name='2FA-disable'),
 ]

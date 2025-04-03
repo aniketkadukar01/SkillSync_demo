@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     'user',
     'rest_framework_simplejwt.token_blacklist',
     'course',
-    'drf_yasg',
-    'two_factor',
-    'django_otp',
-    'django_otp.plugins.otp_totp',
+    # 'drf_yasg',
+    # 'two_factor',
+    # 'django_otp',
+    # 'django_otp.plugins.otp_totp',
+    'django_celery_beat',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_otp.middleware.OTPMiddleware',
+    # 'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -128,6 +130,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
@@ -135,6 +138,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
 }
 
+# Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Or other backend
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -147,11 +151,28 @@ DEFAULT_FROM_EMAIL = 'aniket.k@amazatic.com'
 PASSWORD_RESET_TIMEOUT = 900 # 900 SEC = 15 MIN
 
 # Celery Settings
+CELERY_IMPORTS = ('api.v1.tasks.send_whatsapp_message_on_user_create',)
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-# CELERY_TIMEZONE = 'UTC'
+CELERY_TIMEZONE = 'UTC'
 # CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    'welcome-whatsapp-message': {
+        'task': 'api.v1.tasks.send_whatsapp_message_on_user_create.welcome_whatsapp_message',
+        'schedule': 10.0,  # Runs every 10 seconds
+    },
+}
+
+# Swagger settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}

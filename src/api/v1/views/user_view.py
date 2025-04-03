@@ -19,7 +19,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from ..paginations.user_pagination import UserPagination
 from ..tasks.send_email_for_reset_password import send_forgot_password_email
-from django_otp.plugins.otp_totp.models import TOTPDevice
+# from django_otp.plugins.otp_totp.models import TOTPDevice
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes, OpenApiExample, OpenApiResponse
 
 
 def get_tokens_for_user(user):
@@ -123,21 +124,137 @@ class LogoutAllView(ViewSet):
         return Response({'success': 'Logout from all devices successfully.'}, status=status.HTTP_200_OK)
 
 
+@extend_schema(
+    request=ForgetPasswordSerializer,
+    responses={
+        200: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description='Password reset email sent successfully.',
+            examples=[
+                OpenApiExample(
+                    'Success Example',
+                    description='Example of a successful response.',
+                    value={"success": "Reset password email sent to your email."}
+                )
+            ]
+        ),
+        400: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description='Bad request, validation errors occurred.',
+            examples=[
+                OpenApiExample(
+                    'Bad Request Example',
+                    description='Example of a validation error response.',
+                    value={"error": "This field is required."}
+                )
+            ]
+        ),
+        404: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description='User not found with the provided email.',
+            examples=[
+                OpenApiExample(
+                    'Not Found Example',
+                    description='Example when the user is not found.',
+                    value={"error": "User with this email not found."}
+                )
+            ]
+        ),
+    },
+    parameters=[
+        OpenApiParameter(
+            name='email',
+            description='The email address of the user requesting a password reset.',
+            required=True,
+            type=OpenApiTypes.STR,  # Corrected from OpenApiTypes.STRING to OpenApiTypes.STR
+            examples=[
+                OpenApiExample(
+                    'Email Example',
+                    description='Example of an email parameter.',
+                    value='user@example.com'
+                )
+            ]
+        )
+    ],
+    auth=None,  # No authentication required for this endpoint
+    operation_id='requestPasswordReset',  # Custom operation ID
+    examples=[
+        OpenApiExample(
+            'Forgot Password Request Example',
+            description='Example request body for forgetting password.',
+            value={"email": "user@example.com"}
+        )
+    ]
+)
 class ForgetPasswordView(APIView):
-    """This View is used for user forgot password."""
+    """
+    View to handle the password reset process for users who have forgotten their passwords.
+
+    This endpoint accepts the user's email address, verifies if the user exists, and sends a password reset link
+    to the provided email. The link contains an encoded user ID and token for secure password reset functionality.
+
+    Attributes:
+
+        authentication_classes (list): Empty list as no authentication is required to access this endpoint.
+        permission_classes (list): Empty list to allow unauthenticated access.
+
+    Methods:
+
+        post(request, *args, **kwargs):
+            Handles POST requests to initiate the password reset process.
+            - Validates the provided email address.
+            - Checks if the user exists in the database.
+            - Generates an encoded user ID and token.
+            - Sends a password reset email containing the reset link.
+
+    Request Parameters:
+
+        - **email** (str): The user's email address to receive the password reset link.
+
+    Responses:
+
+        - **200 OK**:
+            {
+                "success": "Reset password email sent to your email."
+            }
+            Indicates that the reset email was sent successfully.
+
+        - **400 Bad Request**:
+            {
+                "error": "Validation error details."
+            }
+            Returned when the provided email is invalid or missing.
+
+        - **404 Not Found**:
+            {
+                "error": "User with this email not found."
+            }
+            Indicates that no user exists with the provided email address.
+
+    Example Request:
+
+        POST /api/v1/forget-password/
+        {
+            "email": "user@example.com"
+        }
+
+    Example Successful Response:
+
+        {
+            "success": "Reset password email sent to your email."
+        }
+
+    Example Error Response:
+
+        {
+            "error": "User with this email not found."
+        }
+    """
 
     authentication_classes = []
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
-        """
-        This method create encode user_id and user_token based on email passed and sent back a link through email.
-        This link is for frontend on click that link a new page open for reset password.
-        :param request: email
-        :param args: position arguments if any
-        :param kwargs: keywords arguments if any.
-        :return: email to user.
-        """
         serializer = ForgetPasswordSerializer(data=request.data)
         if serializer.is_valid():
             try:
@@ -245,57 +362,57 @@ class MeApiView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class Enable2FAView(APIView):
-    """
-    This view class is used to implement 2FA.
-    first we create the url for qr code when user first request, using get handler method
-    second after scan the qrcode the otp start generating in google authenticator app, user have to enter otp to verify himself.
-    then it is successfully enable, using post handle method.
-    """
-    def get(self, request):
-        device, created = TOTPDevice.objects.get_or_create(user=request.user, confirmed=False)
-
-        if not created and device.confirmed:
-            return Response({'message': '2FA is already enabled on this device.'}, status=status.HTTP_409_CONFLICT)
-
-        return Response({'provisioning_uri': device.config_url}, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        device = TOTPDevice.objects.filter(user=request.user, confirmed=False).first()
-
-        if device and device.verify_token(request.data.get('otp')):
-            device.confirmed = True
-            device.save()
-            return Response({'message': '2FA enabled successfully!'}, status=status.HTTP_200_OK)
-
-        return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class VerifyOTPView(APIView):
-    """
-    This View is used to verify otp at the time of user login.
-    View is usefull after the user successfully verified the otp firstly in the Enable2FAView.
-    """
-    def post(self, request):
-        device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
-
-        if device and device.verify_token(request.data.get('otp')):
-            return Response({'message': 'OTP verified successfully!'}, status=status.HTTP_200_OK)
-
-        return Response({'error': 'Invalid OTP or 2FA is disabled.'}, status=status.HTTP_400_BAD_REQUEST)
-
-
-class Disable2FAView(APIView):
-    """
-    View is used to disable the 2FA.
-    """
-    def post(self, request):
-        device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
-
-        if device and device.verify_token(request.data.get('otp')):
-            device.confirmed = False
-            device.save()
-
-            return Response({'message': '2FA has been disabled successfully.'}, status=status.HTTP_200_OK)
-
-        return Response({'error': 'No active 2FA device found.'}, status=status.HTTP_404_NOT_FOUND)
+# class Enable2FAView(APIView):
+#     """
+#     This view class is used to implement 2FA.
+#     first we create the url for qr code when user first request, using get handler method
+#     second after scan the qrcode the otp start generating in google authenticator app, user have to enter otp to verify himself.
+#     then it is successfully enable, using post handle method.
+#     """
+#     def get(self, request):
+#         device, created = TOTPDevice.objects.get_or_create(user=request.user, confirmed=False)
+#
+#         if not created and device.confirmed:
+#             return Response({'message': '2FA is already enabled on this device.'}, status=status.HTTP_409_CONFLICT)
+#
+#         return Response({'provisioning_uri': device.config_url}, status=status.HTTP_200_OK)
+#
+#     def post(self, request):
+#         device = TOTPDevice.objects.filter(user=request.user, confirmed=False).first()
+#
+#         if device and device.verify_token(request.data.get('otp')):
+#             device.confirmed = True
+#             device.save()
+#             return Response({'message': '2FA enabled successfully!'}, status=status.HTTP_200_OK)
+#
+#         return Response({'error': 'Invalid OTP.'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# class VerifyOTPView(APIView):
+#     """
+#     This View is used to verify otp at the time of user login.
+#     View is usefull after the user successfully verified the otp firstly in the Enable2FAView.
+#     """
+#     def post(self, request):
+#         device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+#
+#         if device and device.verify_token(request.data.get('otp')):
+#             return Response({'message': 'OTP verified successfully!'}, status=status.HTTP_200_OK)
+#
+#         return Response({'error': 'Invalid OTP or 2FA is disabled.'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#
+# class Disable2FAView(APIView):
+#     """
+#     View is used to disable the 2FA.
+#     """
+#     def post(self, request):
+#         device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+#
+#         if device and device.verify_token(request.data.get('otp')):
+#             device.confirmed = False
+#             device.save()
+#
+#             return Response({'message': '2FA has been disabled successfully.'}, status=status.HTTP_200_OK)
+#
+#         return Response({'error': 'No active 2FA device found.'}, status=status.HTTP_404_NOT_FOUND)
